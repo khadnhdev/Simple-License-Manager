@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const methodOverride = require('method-override');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
 
 // Khởi tạo Express
 const app = express();
@@ -82,6 +83,13 @@ app.use((err, req, res, next) => {
     message: 'Đã xảy ra lỗi, vui lòng thử lại sau.' 
   });
 });
+
+// Tạo thư mục exports nếu chưa tồn tại
+const exportDir = path.join(__dirname, 'exports');
+if (!fs.existsSync(exportDir)) {
+  fs.mkdirSync(exportDir, { recursive: true });
+  console.log('Đã tạo thư mục exports');
+}
 
 // Khởi động server
 app.listen(PORT, () => {

@@ -33,6 +33,7 @@ router.put('/licenses/:id', isAuthenticated, licenseController.update);
 router.delete('/licenses/:id', isAuthenticated, licenseController.delete);
 router.get('/licenses/logs/:id', isAuthenticated, licenseController.showLogs);
 router.get('/licenses/export', isAuthenticated, licenseController.exportCSV);
+router.get('/licenses/export-filtered', isAuthenticated, licenseController.exportFilteredCSV);
 
 // Quản lý logs
 router.get('/logs', isAuthenticated, verificationController.showAllLogs);

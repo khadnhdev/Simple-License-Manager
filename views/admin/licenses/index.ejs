@@ -5,9 +5,12 @@
       <a href="/admin/licenses/create" class="btn btn-primary me-2">
         <i class="fas fa-plus"></i> Tạo License key mới
       </a>
-      <a href="/admin/licenses/export" class="btn btn-outline-secondary">
-        <i class="fas fa-file-csv"></i> Xuất danh sách License
+      <a href="/admin/licenses/export" class="btn btn-success">
+        <i class="fas fa-file-export"></i> Xuất CSV
       </a>
+      <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#exportFilterModal">
+        <i class="fas fa-filter"></i> Lọc & Xuất
+      </button>
     </div>
   </div>
   
@@ -107,6 +110,59 @@
           <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal lọc -->
+<div class="modal fade" id="exportFilterModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Lọc trước khi xuất</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/admin/licenses/export-filtered" method="GET">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="app_id" class="form-label">Ứng dụng</label>
+            <select class="form-select" id="app_id" name="app_id">
+              <option value="">Tất cả ứng dụng</option>
+              <% apps.forEach(app => { %>
+                <option value="<%= app.id %>"><%= app.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="status" class="form-label">Trạng thái</label>
+            <select class="form-select" id="status" name="status">
+              <option value="">Tất cả trạng thái</option>
+              <option value="active">Đang hoạt động</option>
+              <option value="inactive">Vô hiệu</option>
+            </select>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="from_date" class="form-label">Từ ngày</label>
+                <input type="date" class="form-control" id="from_date" name="from_date">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="to_date" class="form-label">Đến ngày</label>
+                <input type="date" class="form-control" id="to_date" name="to_date">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="submit" class="btn btn-primary">Xuất CSV</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

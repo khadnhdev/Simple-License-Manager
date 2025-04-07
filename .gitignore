@@ -4,3 +4,5 @@ node_modules/ # Bỏ qua thư mục node_modules
 /node_modules
 *.txt
 .env
+# Bỏ qua thư mục chứa các file xuất tạm thời
+/exports/

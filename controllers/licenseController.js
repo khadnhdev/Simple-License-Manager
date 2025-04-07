@@ -11,9 +11,12 @@ const licenseController = {
   index: async (req, res) => {
     try {
       const licenses = await License.getAll();
+      const apps = await App.getAll();
+      
       res.render('admin/licenses/index', { 
         title: 'Quản lý License Keys',
         licenses,
+        apps,
         moment
       });
     } catch (error) {
@@ -173,30 +176,172 @@ const licenseController = {
   // Xuất danh sách license keys ra file CSV
   exportCSV: async (req, res) => {
     try {
-      const licenses = await License.getAll(); // Lấy tất cả license keys
-      const csv = new Parser().parse(licenses);
+      // Lấy tất cả license keys với thông tin bổ sung của ứng dụng
+      const licenses = await License.getAll();
       
-      // Tạo file CSV
-      const filePath = path.join(__dirname, '..', 'exports', `licenses_${Date.now()}.csv`);
-      fs.writeFileSync(filePath, csv);
+      // Tạo thư mục exports nếu chưa tồn tại
+      const exportDir = path.join(__dirname, '..', 'exports');
+      if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true });
+      }
       
-      // Gửi file CSV cho người dùng
-      res.download(filePath, 'licenses.csv', (err) => {
+      // Chuẩn bị dữ liệu cho CSV với các trường cần thiết và tên cột đẹp hơn
+      const csvData = licenses.map(license => ({
+        'Mã license': license.license_key,
+        'Ứng dụng': license.app_name,
+        'Số lần xác thực đã dùng': license.verification_count || 0,
+        'Số lần xác thực tối đa': license.max_verifications === 0 ? 'Không giới hạn' : license.max_verifications,
+        'Số lần còn lại': license.max_verifications === 0 ? 'Không giới hạn' : license.verifications_left,
+        'Ngày tạo': formatDate(license.created_at),
+        'Ngày hết hạn': license.expiry_date ? formatDate(license.expiry_date) : 'Không giới hạn',
+        'Trạng thái': license.is_active ? 'Hoạt động' : 'Vô hiệu',
+        'Lần xác thực cuối': license.last_verified ? formatDate(license.last_verified) : 'Chưa xác thực'
+      }));
+      
+      // Tạo tên tệp với timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const fileName = `licenses-export-${timestamp}.csv`;
+      const filePath = path.join(exportDir, fileName);
+      
+      // Tạo CSV với các tùy chọn định dạng
+      const csvOptions = { 
+        header: true,
+        quote: '"',
+        delimiter: ',',
+      };
+      const parser = new Parser(csvOptions);
+      const csv = parser.parse(csvData);
+      
+      // Ghi file CSV với encoding UTF-8 có BOM để Excel hiển thị tiếng Việt đúng
+      fs.writeFileSync(filePath, '\ufeff' + csv, 'utf8');
+      
+      // Ghi log thông tin
+      console.log(`Đã xuất ${licenses.length} license keys ra file CSV: ${fileName}`);
+      
+      // Tải file xuống
+      res.download(filePath, `license-keys-${timestamp}.csv`, (err) => {
         if (err) {
-          console.error('Error downloading file:', err);
-          req.flash('error_msg', 'Có lỗi xảy ra khi tải file CSV');
-          res.redirect('/admin/licenses');
+          console.error('Lỗi khi tải file CSV:', err);
+          if (!res.headersSent) {
+            req.flash('error_msg', 'Có lỗi xảy ra khi tải file CSV');
+            res.redirect('/admin/licenses');
+          }
+          return;
         }
         
-        // Xóa file sau khi tải xong
-        fs.unlinkSync(filePath);
+        // Xóa file tạm sau khi tải xong
+        setTimeout(() => {
+          try {
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+              console.log(`Đã xóa file tạm: ${filePath}`);
+            }
+          } catch (e) {
+            console.error('Lỗi khi xóa file tạm:', e);
+          }
+        }, 5000); // đợi 5 giây trước khi xóa để đảm bảo quá trình tải hoàn tất
       });
     } catch (error) {
-      console.error('Error exporting licenses to CSV:', error);
+      console.error('Lỗi khi xuất license keys ra CSV:', error);
+      req.flash('error_msg', 'Có lỗi xảy ra khi xuất danh sách license keys');
+      res.redirect('/admin/licenses');
+    }
+  },
+
+  // Xuất danh sách license keys đã lọc ra file CSV
+  exportFilteredCSV: async (req, res) => {
+    try {
+      const { app_id, status, from_date, to_date } = req.query;
+      
+      // Xây dựng điều kiện lọc
+      const filters = {};
+      if (app_id) filters.app_id = app_id;
+      if (status) filters.is_active = status === 'active' ? 1 : 0;
+      
+      // Lấy danh sách license keys theo bộ lọc
+      const licenses = await License.getFiltered(filters, from_date, to_date);
+      
+      // Chuẩn bị dữ liệu cho CSV
+      const csvData = licenses.map(license => ({
+        'Mã license': license.license_key,
+        'Ứng dụng': license.app_name,
+        'Số lần xác thực đã dùng': license.verification_count || 0,
+        'Số lần xác thực tối đa': license.max_verifications === 0 ? 'Không giới hạn' : license.max_verifications,
+        'Số lần còn lại': license.max_verifications === 0 ? 'Không giới hạn' : license.verifications_left,
+        'Ngày tạo': formatDate(license.created_at),
+        'Ngày hết hạn': license.expiry_date ? formatDate(license.expiry_date) : 'Không giới hạn',
+        'Trạng thái': license.is_active ? 'Hoạt động' : 'Vô hiệu',
+        'Lần xác thực cuối': license.last_verified ? formatDate(license.last_verified) : 'Chưa xác thực'
+      }));
+      
+      // Tạo thư mục exports nếu chưa tồn tại
+      const exportDir = path.join(__dirname, '..', 'exports');
+      if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true });
+      }
+      
+      // Tạo tên tệp với timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const fileName = `licenses-filtered-export-${timestamp}.csv`;
+      const filePath = path.join(exportDir, fileName);
+      
+      // Tạo CSV với các tùy chọn định dạng
+      const csvOptions = { 
+        header: true,
+        quote: '"',
+        delimiter: ',',
+      };
+      const parser = new Parser(csvOptions);
+      const csv = parser.parse(csvData);
+      
+      // Ghi file CSV với encoding UTF-8 có BOM
+      fs.writeFileSync(filePath, '\ufeff' + csv, 'utf8');
+      
+      // Ghi log thông tin
+      console.log(`Đã xuất ${licenses.length} license keys (đã lọc) ra file CSV: ${fileName}`);
+      
+      // Tải file xuống
+      res.download(filePath, `license-keys-filtered-${timestamp}.csv`, (err) => {
+        if (err) {
+          console.error('Lỗi khi tải file CSV:', err);
+          if (!res.headersSent) {
+            req.flash('error_msg', 'Có lỗi xảy ra khi tải file CSV');
+            res.redirect('/admin/licenses');
+          }
+          return;
+        }
+        
+        // Xóa file tạm sau khi tải xong
+        setTimeout(() => {
+          try {
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+              console.log(`Đã xóa file tạm: ${filePath}`);
+            }
+          } catch (e) {
+            console.error('Lỗi khi xóa file tạm:', e);
+          }
+        }, 5000);
+      });
+    } catch (error) {
+      console.error('Lỗi khi xuất license keys đã lọc ra CSV:', error);
       req.flash('error_msg', 'Có lỗi xảy ra khi xuất danh sách license keys');
       res.redirect('/admin/licenses');
     }
   }
 };
+
+// Helper function để định dạng ngày tháng
+function formatDate(dateString) {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('vi-VN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
 
 module.exports = licenseController; 

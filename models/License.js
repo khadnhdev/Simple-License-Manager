@@ -135,6 +135,60 @@ class License {
       throw error;
     }
   }
+
+  // Lấy danh sách license keys theo các điều kiện lọc
+  static async getFiltered(filters = {}, fromDate = null, toDate = null) {
+    try {
+      let query = `
+        SELECT l.*, a.name as app_name, 
+        (SELECT COUNT(*) FROM verification_logs vl WHERE vl.license_id = l.id) as verification_count
+        FROM licenses l
+        JOIN apps a ON l.app_id = a.id
+        WHERE 1=1
+      `;
+      
+      const queryParams = [];
+      
+      // Thêm điều kiện lọc theo app_id
+      if (filters.app_id) {
+        query += ` AND l.app_id = ?`;
+        queryParams.push(filters.app_id);
+      }
+      
+      // Thêm điều kiện lọc theo trạng thái
+      if (filters.is_active !== undefined) {
+        query += ` AND l.is_active = ?`;
+        queryParams.push(filters.is_active);
+      }
+      
+      // Thêm điều kiện lọc theo ngày tạo
+      if (fromDate) {
+        query += ` AND l.created_at >= ?`;
+        queryParams.push(fromDate);
+      }
+      
+      if (toDate) {
+        query += ` AND l.created_at <= ?`;
+        queryParams.push(toDate);
+      }
+      
+      query += ` ORDER BY l.created_at DESC`;
+      
+      const [rows] = await executeQuery(query, queryParams);
+      
+      // Tính toán số lần xác thực còn lại cho mỗi license
+      return rows.map(license => {
+        const verificationCount = license.verification_count || 0;
+        license.verifications_left = license.max_verifications === 0 ? 
+          'Không giới hạn' : 
+          license.max_verifications - verificationCount;
+        return license;
+      });
+    } catch (error) {
+      console.error('Error getting filtered licenses:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = License; 
