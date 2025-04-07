@@ -1,0 +1,42 @@
+/* Custom styles */
+.navbar {
+  margin-bottom: 20px;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table-responsive {
+  margin-bottom: 1.5rem;
+}
+
+pre {
+  border-radius: 4px;
+}
+
+.btn-icon {
+  padding: 0.25rem 0.5rem;
+  margin: 0 0.1rem;
+}
+
+.license-key {
+  font-family: monospace;
+  font-weight: bold;
+}
+
+/* Dashboard stats */
+.stats-card {
+  border-left: 4px solid;
+  transition: transform 0.2s;
+}
+
+.stats-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Login page */
+.login-logo {
+  max-width: 100px;
+  margin-bottom: 1.5rem;
+} 

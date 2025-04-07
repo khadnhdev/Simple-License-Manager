@@ -1,0 +1,55 @@
+<div class="jumbotron py-5">
+  <h1 class="display-4">Hệ thống quản lý License Keys</h1>
+  <p class="lead">Giải pháp quản lý license keys đơn giản và hiệu quả cho các ứng dụng của bạn.</p>
+  <hr class="my-4">
+  <p>Tạo, quản lý và theo dõi license keys một cách dễ dàng. Hỗ trợ giới hạn số lần xác thực và ngày hết hạn.</p>
+  <!-- <a href="/admin/login" class="btn btn-primary btn-lg">Đăng nhập Admin</a> -->
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-cubes fa-3x mb-3 text-primary"></i>
+        <h5 class="card-title">Quản lý nhiều ứng dụng</h5>
+        <p class="card-text">Quản lý license keys cho nhiều ứng dụng khác nhau trên cùng một hệ thống.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-shield-alt fa-3x mb-3 text-success"></i>
+        <h5 class="card-title">Bảo mật cao</h5>
+        <p class="card-text">Hệ thống xác thực an toàn với API riêng biệt và giới hạn số lần gọi.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
+        <h5 class="card-title">Theo dõi sử dụng</h5>
+        <p class="card-text">Ghi lại thông tin về IP và thời gian mỗi khi xác thực license key.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-5">
+  <div class="card-header">
+    <h5 class="mb-0">Tích hợp API</h5>
+  </div>
+  <div class="card-body">
+    <p>Dễ dàng tích hợp vào ứng dụng của bạn chỉ với một API endpoint đơn giản:</p>
+    <pre class="bg-light p-3"><code>POST /api/verify
+Content-Type: application/json
+
+{
+  "license_key": "YOUR_LICENSE_KEY",
+  "app_id": "YOUR_APP_ID"
+}</code></pre>
+  </div>
+</div> 

@@ -1,0 +1,52 @@
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <div class="card border-primary h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-cubes fa-3x mb-3 text-primary"></i>
+        <h5 class="card-title">Quản lý Ứng dụng</h5>
+        <p class="card-text">Tạo và quản lý các ứng dụng của bạn</p>
+        <a href="/admin/apps" class="btn btn-primary">Xem ứng dụng</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4 mb-4">
+    <div class="card border-success h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-key fa-3x mb-3 text-success"></i>
+        <h5 class="card-title">Quản lý License Keys</h5>
+        <p class="card-text">Tạo và quản lý license keys cho các ứng dụng</p>
+        <a href="/admin/licenses" class="btn btn-success">Xem license keys</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4 mb-4">
+    <div class="card border-info h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
+        <h5 class="card-title">Xem Logs</h5>
+        <p class="card-text">Xem lịch sử xác thực license keys</p>
+        <a href="/admin/logs" class="btn btn-info">Xem logs</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">API Endpoint</h5>
+  </div>
+  <div class="card-body">
+    <h6>Xác thực License Key</h6>
+    <pre class="bg-light p-3"><code>POST /api/verify
+Content-Type: application/json
+
+{
+  "license_key": "YOUR_LICENSE_KEY",
+  "app_id": "YOUR_APP_ID"
+}</code></pre>
+  </div>
+</div> 

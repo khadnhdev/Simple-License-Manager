@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" href="/admin/dashboard">Quản lý License Keys</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <% if (user) { %>
+          <li class="nav-item">
+            <a class="nav-link <%= path === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= path && path.startsWith('/admin/apps') ? 'active' : '' %>" href="/admin/apps">Ứng dụng</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= path && path.startsWith('/admin/licenses') ? 'active' : '' %>" href="/admin/licenses">License Keys</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= path === '/admin/logs' ? 'active' : '' %>" href="/admin/logs">Logs</a>
+          </li>
+        <% } %>
+      </ul>
+      <ul class="navbar-nav">
+        <% if (user) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= user.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/admin/logout">Đăng xuất</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/login">Đăng nhập</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav> 

@@ -1,0 +1,117 @@
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Quản lý License Keys</h1>
+    <a href="/admin/licenses/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Tạo License key mới
+    </a>
+  </div>
+  
+  <% if (licenses && licenses.length > 0) { %>
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th>License Key</th>
+                <th>Ứng dụng</th>
+                <th>Số lần xác thực</th>
+                <th>Hạn dùng</th>
+                <th>Trạng thái</th>
+                <th class="text-end">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% licenses.forEach(license => { %>
+                <tr>
+                  <td><code><%= license.license_key %></code></td>
+                  <td><%= license.app_name %></td>
+                  <td>
+                    <% if (license.max_verifications === 0) { %>
+                      Không giới hạn
+                    <% } else { %>
+                      <%= license.verifications_left %> / <%= license.max_verifications %>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (license.expiry_date) { %>
+                      <%= new Date(license.expiry_date).toLocaleDateString('vi-VN') %>
+                      <% 
+                        const now = new Date();
+                        const expiry = new Date(license.expiry_date);
+                        if (expiry < now) { 
+                      %>
+                        <span class="badge bg-danger">Hết hạn</span>
+                      <% } %>
+                    <% } else { %>
+                      Không giới hạn
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (license.is_active) { %>
+                      <span class="badge bg-success">Hoạt động</span>
+                    <% } else { %>
+                      <span class="badge bg-danger">Vô hiệu</span>
+                    <% } %>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      <a href="/admin/licenses/logs/<%= license.id %>" class="btn btn-sm btn-outline-info">
+                        <i class="fas fa-history"></i>
+                      </a>
+                      <a href="/admin/licenses/edit/<%= license.id %>" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <button type="button" class="btn btn-sm btn-outline-danger" 
+                              onclick="confirmDelete('<%= license.id %>', '<%= license.license_key %>')">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      Chưa có license key nào. Hãy tạo license key đầu tiên của bạn.
+    </div>
+  <% } %>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xác nhận xóa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn xóa license key <strong id="licenseKey"></strong>?
+        <p class="text-danger mt-2"><small>Hành động này không thể khôi phục.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <form id="deleteForm" method="POST" action="">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmDelete(id, key) {
+  document.getElementById('licenseKey').textContent = key;
+  document.getElementById('deleteForm').action = `/admin/licenses/${id}`;
+  
+  const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+  deleteModal.show();
+}
+</script> 

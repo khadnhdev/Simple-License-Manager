@@ -1,0 +1,47 @@
+<div class="container my-4">
+  <h1 class="h3 mb-4">Nhật ký xác thực</h1>
+  
+  <% if (logs && logs.length > 0) { %>
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th>Thời gian</th>
+                <th>Ứng dụng</th>
+                <th>License Key</th>
+                <th>IP</th>
+                <th>Kết quả</th>
+                <th>Thông báo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% logs.forEach(log => { %>
+                <tr>
+                  <td><%= new Date(log.verified_at).toLocaleString('vi-VN') %></td>
+                  <td><%= log.app_name %></td>
+                  <td><code><%= log.license_key %></code></td>
+                  <td><code><%= log.ip_address %></code></td>
+                  <td>
+                    <% if (log.success) { %>
+                      <span class="badge bg-success">Thành công</span>
+                    <% } else { %>
+                      <span class="badge bg-danger">Thất bại</span>
+                    <% } %>
+                  </td>
+                  <td><%= log.message %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      Chưa có nhật ký xác thực nào.
+    </div>
+  <% } %>
+</div> 

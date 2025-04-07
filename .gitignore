@@ -1,0 +1,6 @@
+*.log        # Bỏ qua tất cả các tệp log
+node_modules/ # Bỏ qua thư mục node_modules
+*.env         # Bỏ qua tất cả các tệp có phần mở rộng .env
+/node_modules
+*.txt
+.env

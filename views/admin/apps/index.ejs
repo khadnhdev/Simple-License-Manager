@@ -1,0 +1,91 @@
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Quản lý ứng dụng</h1>
+    <a href="/admin/apps/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Thêm ứng dụng mới
+    </a>
+  </div>
+  
+  <% if (apps && apps.length > 0) { %>
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th>Tên ứng dụng</th>
+                <th>Mô tả</th>
+                <th>Ngày tạo</th>
+                <th class="text-center">License keys</th>
+                <th class="text-end">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% apps.forEach(app => { %>
+                <tr>
+                  <td><%= app.name %></td>
+                  <td><%= app.description || 'Không có mô tả' %></td>
+                  <td><%= new Date(app.created_at).toLocaleDateString('vi-VN') %></td>
+                  <td class="text-center">
+                    <a href="/admin/apps/<%= app.id %>" class="btn btn-sm btn-outline-primary">
+                      Xem keys
+                    </a>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      <a href="/admin/apps/edit/<%= app.id %>" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <button type="button" class="btn btn-sm btn-outline-danger" 
+                              onclick="confirmDelete('<%= app.id %>', '<%= app.name %>')">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      Chưa có ứng dụng nào. Hãy tạo ứng dụng đầu tiên của bạn.
+    </div>
+  <% } %>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xác nhận xóa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn xóa ứng dụng <strong id="appName"></strong>?
+        <p class="text-danger mt-2"><small>Hành động này sẽ xóa tất cả license keys liên quan và không thể khôi phục.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <form id="deleteForm" method="POST" action="">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmDelete(id, name) {
+  document.getElementById('appName').textContent = name;
+  document.getElementById('deleteForm').action = `/admin/apps/${id}`;
+  
+  const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+  deleteModal.show();
+}
+</script> 

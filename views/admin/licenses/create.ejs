@@ -1,0 +1,79 @@
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Tạo License Key mới</h4>
+        </div>
+        <div class="card-body">
+          <form action="/admin/licenses" method="POST">
+            <div class="mb-3">
+              <label for="app_id" class="form-label">Ứng dụng <span class="text-danger">*</span></label>
+              <select class="form-select" id="app_id" name="app_id" required>
+                <option value="" disabled <%= !appId ? 'selected' : '' %>>Chọn ứng dụng</option>
+                <% apps.forEach(app => { %>
+                  <option value="<%= app.id %>" <%= app.id == appId ? 'selected' : '' %>><%= app.name %></option>
+                <% }) %>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="custom_key" class="form-label">License Key (Tùy chọn)</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="custom_key" name="custom_key" placeholder="Để trống để tự động tạo key">
+                <button class="btn btn-outline-secondary" type="button" onclick="generateRandomKey()">
+                  <i class="fas fa-random"></i> Tạo ngẫu nhiên
+                </button>
+              </div>
+              <div class="form-text">Nếu không nhập, hệ thống sẽ tự động tạo một key ngẫu nhiên.</div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="max_verifications" class="form-label">Số lần xác thực tối đa</label>
+              <input type="number" class="form-control" id="max_verifications" name="max_verifications" min="0" value="0">
+              <div class="form-text">Nhập 0 để không giới hạn số lần xác thực.</div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="expiry_date" class="form-label">Ngày hết hạn (Tùy chọn)</label>
+              <input type="date" class="form-control" id="expiry_date" name="expiry_date">
+              <div class="form-text">Để trống nếu không giới hạn thời gian sử dụng.</div>
+            </div>
+            
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="true" checked>
+              <label class="form-check-label" for="is_active">
+                License key hoạt động
+              </label>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+              <a href="/admin/licenses" class="btn btn-secondary">Hủy</a>
+              <button type="submit" class="btn btn-primary">Tạo License Key</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function generateRandomKey() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  const parts = 4;
+  const partLength = 4;
+  
+  for (let p = 0; p < parts; p++) {
+    for (let i = 0; i < partLength; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    if (p < parts - 1) {
+      result += '-';
+    }
+  }
+  
+  document.getElementById('custom_key').value = result;
+}
+</script> 
