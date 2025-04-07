@@ -2,6 +2,9 @@ const License = require('../models/License');
 const App = require('../models/App');
 const VerificationLog = require('../models/VerificationLog');
 const moment = require('moment');
+const fs = require('fs');
+const path = require('path');
+const { Parser } = require('json2csv');
 
 const licenseController = {
   // Hiển thị danh sách tất cả license keys
@@ -38,25 +41,31 @@ const licenseController = {
 
   // Xử lý tạo license key mới
   create: async (req, res) => {
-    const { app_id, max_verifications, expiry_date, custom_key } = req.body;
+    const { app_id, quantity, max_verifications, expiry_date, custom_key } = req.body;
     
     // Validate input
-    if (!app_id) {
-      req.flash('error_msg', 'Vui lòng chọn một ứng dụng');
+    if (!app_id || !quantity || quantity < 1) {
+      req.flash('error_msg', 'Vui lòng chọn một ứng dụng và nhập số lượng hợp lệ');
       return res.redirect('/admin/licenses/create');
     }
     
     try {
-      const license = {
-        app_id,
-        license_key: custom_key || undefined, // Sử dụng custom key nếu có
-        max_verifications: parseInt(max_verifications) || 0,
-        expiry_date: expiry_date || null,
-        is_active: true
-      };
+      const createdKeys = [];
       
-      const result = await License.create(license);
-      req.flash('success_msg', `Tạo license key thành công: ${result.license_key}`);
+      for (let i = 0; i < quantity; i++) {
+        const license = {
+          app_id,
+          license_key: custom_key || undefined, // Sử dụng custom key nếu có
+          max_verifications: parseInt(max_verifications) || 0,
+          expiry_date: expiry_date || null,
+          is_active: true
+        };
+        
+        const result = await License.create(license);
+        createdKeys.push(result.license_key);
+      }
+      
+      req.flash('success_msg', `Tạo ${quantity} license key thành công: ${createdKeys.join(', ')}`);
       res.redirect('/admin/licenses');
     } catch (error) {
       console.error('Error creating license:', error);
@@ -157,6 +166,34 @@ const licenseController = {
     } catch (error) {
       console.error('Error getting license logs:', error);
       req.flash('error_msg', 'Có lỗi xảy ra khi lấy lịch sử xác thực');
+      res.redirect('/admin/licenses');
+    }
+  },
+
+  // Xuất danh sách license keys ra file CSV
+  exportCSV: async (req, res) => {
+    try {
+      const licenses = await License.getAll(); // Lấy tất cả license keys
+      const csv = new Parser().parse(licenses);
+      
+      // Tạo file CSV
+      const filePath = path.join(__dirname, '..', 'exports', `licenses_${Date.now()}.csv`);
+      fs.writeFileSync(filePath, csv);
+      
+      // Gửi file CSV cho người dùng
+      res.download(filePath, 'licenses.csv', (err) => {
+        if (err) {
+          console.error('Error downloading file:', err);
+          req.flash('error_msg', 'Có lỗi xảy ra khi tải file CSV');
+          res.redirect('/admin/licenses');
+        }
+        
+        // Xóa file sau khi tải xong
+        fs.unlinkSync(filePath);
+      });
+    } catch (error) {
+      console.error('Error exporting licenses to CSV:', error);
+      req.flash('error_msg', 'Có lỗi xảy ra khi xuất danh sách license keys');
       res.redirect('/admin/licenses');
     }
   }
