@@ -1,0 +1,87 @@
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Quản lý External Keys</h1>
+    <a href="/admin/external-keys/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Thêm External Key mới
+    </a>
+  </div>
+  
+  <% if (externalKeys && externalKeys.length > 0) { %>
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th>External Key</th>
+                <th>Internal Key</th>
+                <th>Ứng dụng</th>
+                <th>Ngày tạo</th>
+                <th class="text-end">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% externalKeys.forEach(key => { %>
+                <tr>
+                  <td><code><%= key.external_key_converted %></code></td>
+                  <td><code><%= key.internal_key %></code></td>
+                  <td><%= key.app_name %></td>
+                  <td><%= new Date(key.created_at).toLocaleDateString('vi-VN') %></td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      <a href="/admin/external-keys/edit/<%= key.id %>" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <button type="button" class="btn btn-sm btn-outline-danger" 
+                              onclick="confirmDelete('<%= key.id %>', '<%= key.external_key_converted %>')">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      Chưa có external key nào. Hãy tạo external key đầu tiên của bạn.
+    </div>
+  <% } %>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xác nhận xóa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn xóa external key <strong id="keyName"></strong>?
+        <p class="text-danger mt-2"><small>Hành động này không thể khôi phục.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <form id="deleteForm" method="POST" action="">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmDelete(id, key) {
+  document.getElementById('keyName').textContent = key;
+  document.getElementById('deleteForm').action = `/admin/external-keys/${id}`;
+  
+  const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+  deleteModal.show();
+}
+</script> 

@@ -1,0 +1,41 @@
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Thêm External Key mới</h4>
+        </div>
+        <div class="card-body">
+          <form action="/admin/external-keys" method="POST">
+            <div class="mb-3">
+              <label for="app_id" class="form-label">Ứng dụng <span class="text-danger">*</span></label>
+              <select class="form-select" id="app_id" name="app_id" required>
+                <option value="" disabled <%= !appId ? 'selected' : '' %>>Chọn ứng dụng</option>
+                <% apps.forEach(app => { %>
+                  <option value="<%= app.id %>" <%= app.id == appId ? 'selected' : '' %>><%= app.name %></option>
+                <% }) %>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="external_key_converted" class="form-label">External Key <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="external_key_converted" name="external_key_converted" required>
+              <div class="form-text">Mã key từ hệ thống bên ngoài.</div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="internal_key" class="form-label">Internal Key <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="internal_key" name="internal_key" required>
+              <div class="form-text">Mã license key của hệ thống này.</div>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+              <a href="/admin/external-keys" class="btn btn-secondary">Hủy</a>
+              <button type="submit" class="btn btn-primary">Thêm External Key</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

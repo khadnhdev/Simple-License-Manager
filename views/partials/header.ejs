@@ -17,6 +17,9 @@
             <a class="nav-link <%= path && path.startsWith('/admin/licenses') ? 'active' : '' %>" href="/admin/licenses">License Keys</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link <%= path && path.startsWith('/admin/external-keys') ? 'active' : '' %>" href="/admin/external-keys">External Keys</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link <%= path === '/admin/logs' ? 'active' : '' %>" href="/admin/logs">Logs</a>
           </li>
         <% } %>

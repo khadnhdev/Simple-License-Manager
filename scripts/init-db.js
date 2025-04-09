@@ -82,6 +82,21 @@ async function initializeDatabase() {
     `);
     console.log('Bảng verification_logs được tạo hoặc đã tồn tại.');
 
+    // Tạo bảng external_key_converted
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS external_key_converted (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        external_key_converted VARCHAR(255) NOT NULL,
+        internal_key VARCHAR(255) NOT NULL,
+        app_id INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (app_id) REFERENCES apps(id) ON DELETE CASCADE,
+        UNIQUE KEY (external_key_converted, app_id)
+      )
+    `);
+    console.log('Bảng external_key_converted được tạo hoặc đã tồn tại.');
+
     // Kiểm tra nếu admin user đã tồn tại
     const [users] = await connection.query('SELECT * FROM users WHERE username = ?', [process.env.ADMIN_USERNAME || 'admin']);
     

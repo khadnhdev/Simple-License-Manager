@@ -4,6 +4,7 @@ const adminController = require('../controllers/adminController');
 const appController = require('../controllers/appController');
 const licenseController = require('../controllers/licenseController');
 const verificationController = require('../controllers/verificationController');
+const externalKeyController = require('../controllers/externalKeyController');
 const { isAuthenticated, isNotAuthenticated } = require('../middleware/auth');
 const { checkSafetyEntrance } = require('../middleware/safetyEntrance');
 
@@ -37,6 +38,14 @@ router.get('/licenses/export-filtered', isAuthenticated, licenseController.expor
 
 // Quản lý logs
 router.get('/logs', isAuthenticated, verificationController.showAllLogs);
+
+// Quản lý external keys
+router.get('/external-keys', isAuthenticated, externalKeyController.index);
+router.get('/external-keys/create', isAuthenticated, externalKeyController.showCreate);
+router.post('/external-keys', isAuthenticated, externalKeyController.create);
+router.get('/external-keys/edit/:id', isAuthenticated, externalKeyController.showEdit);
+router.post('/external-keys/update/:id', isAuthenticated, externalKeyController.update);
+router.delete('/external-keys/:id', isAuthenticated, externalKeyController.delete);
 
 // Mặc định redirect về dashboard
 router.get('/', isAuthenticated, (req, res) => {
