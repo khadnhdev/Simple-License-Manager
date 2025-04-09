@@ -14,7 +14,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-      <a class="navbar-brand" href="/">Hệ thống License Keys</a>
+      <a class="navbar-brand" href="/">License Key Converter</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -22,7 +22,7 @@
         <ul class="navbar-nav ms-auto">
           <% if (process.env.DISABLE_DEFAULT_ADMIN !== 'true') { %>
           <li class="nav-item">
-            <a class="nav-link" href="/admin/login">Đăng nhập Admin</a>
+            <a class="nav-link" href="/admin/login">Login Admin</a>
           </li>
           <% } %>
         </ul>
@@ -36,7 +36,7 @@
 
   <footer class="bg-light py-4 mt-5">
     <div class="container text-center">
-      <p class="mb-0">&copy; <%= new Date().getFullYear() %> Hệ thống quản lý License Keys</p>
+      <p class="mb-0">&copy; <%= new Date().getFullYear() %> License Key Converter</p>
     </div>
   </footer>
 

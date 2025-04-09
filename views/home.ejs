@@ -1,9 +1,15 @@
 <div class="jumbotron py-5">
-  <h1 class="display-4">Hệ thống quản lý License Keys</h1>
-  <p class="lead">Giải pháp quản lý license keys đơn giản và hiệu quả cho các ứng dụng của bạn.</p>
+  <h1 class="display-4">License Key Management System</h1>
+  <p class="lead">A simple and effective license key management solution for your applications.</p>
   <hr class="my-4">
-  <p>Tạo, quản lý và theo dõi license keys một cách dễ dàng. Hỗ trợ giới hạn số lần xác thực và ngày hết hạn.</p>
-  <!-- <a href="/admin/login" class="btn btn-primary btn-lg">Đăng nhập Admin</a> -->
+  <p>Create, manage and track license keys with ease. Supports verification limits and expiration dates.</p>
+  <!-- <a href="/admin/login" class="btn btn-primary btn-lg">Admin Login</a> -->
+</div>
+
+<div class="mt-4 text-center">
+  <a href="/convert" class="btn btn-outline-primary btn-lg">
+    <i class="fas fa-exchange-alt me-2"></i> Convert Gumroad License Key
+  </a>
 </div>
 
 <div class="row mt-5">
@@ -11,8 +17,8 @@
     <div class="card h-100">
       <div class="card-body text-center">
         <i class="fas fa-cubes fa-3x mb-3 text-primary"></i>
-        <h5 class="card-title">Quản lý nhiều ứng dụng</h5>
-        <p class="card-text">Quản lý license keys cho nhiều ứng dụng khác nhau trên cùng một hệ thống.</p>
+        <h5 class="card-title">Multi-Application Management</h5>
+        <p class="card-text">Manage license keys for multiple applications within a single system.</p>
       </div>
     </div>
   </div>
@@ -21,8 +27,8 @@
     <div class="card h-100">
       <div class="card-body text-center">
         <i class="fas fa-shield-alt fa-3x mb-3 text-success"></i>
-        <h5 class="card-title">Bảo mật cao</h5>
-        <p class="card-text">Hệ thống xác thực an toàn với API riêng biệt và giới hạn số lần gọi.</p>
+        <h5 class="card-title">High Security</h5>
+        <p class="card-text">Secure verification system with dedicated API and request rate limiting.</p>
       </div>
     </div>
   </div>
@@ -31,8 +37,8 @@
     <div class="card h-100">
       <div class="card-body text-center">
         <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
-        <h5 class="card-title">Theo dõi sử dụng</h5>
-        <p class="card-text">Ghi lại thông tin về IP và thời gian mỗi khi xác thực license key.</p>
+        <h5 class="card-title">Usage Tracking</h5>
+        <p class="card-text">Record IP information and timestamp each time a license key is verified.</p>
       </div>
     </div>
   </div>
@@ -40,10 +46,10 @@
 
 <div class="card mt-5">
   <div class="card-header">
-    <h5 class="mb-0">Tích hợp API</h5>
+    <h5 class="mb-0">API Integration</h5>
   </div>
   <div class="card-body">
-    <p>Dễ dàng tích hợp vào ứng dụng của bạn chỉ với một API endpoint đơn giản:</p>
+    <p>Easily integrate into your application with a simple API endpoint:</p>
     <pre class="bg-light p-3"><code>POST /api/verify
 Content-Type: application/json
 

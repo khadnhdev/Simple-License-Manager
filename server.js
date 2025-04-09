@@ -8,6 +8,7 @@ const methodOverride = require('method-override');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
+const publicController = require('./controllers/publicController');
 
 // Khởi tạo Express
 const app = express();
@@ -28,10 +29,12 @@ app.use(methodOverride('_method'));
 app.use(cookieParser());
 
 // Session
+const MemoryStore = session.MemoryStore;
 app.use(session({
   secret: process.env.JWT_SECRET || 'secret',
   resave: false,
   saveUninitialized: true,
+  store: new MemoryStore(),
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000 // 1 day
@@ -54,6 +57,7 @@ app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
+  res.locals.success = req.flash('success');
   res.locals.user = req.session.user || null;
   res.locals.path = req.path;
   next();
@@ -63,10 +67,16 @@ app.use((req, res, next) => {
 const webRoutes = require('./routes/webRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const publicRoutes = require('./routes/publicRoutes');
 
+// Đảm bảo đặt middleware theo thứ tự ưu tiên xử lý
 app.use('/admin', adminRoutes);
 app.use('/api', apiRoutes);
 app.use('/', webRoutes);
+
+// Thêm route chuyển đổi license trực tiếp trong server.js
+app.get('/convert', publicController.showConvertForm);
+app.post('/convert', publicController.convertKey);
 
 // Error handling
 app.use((req, res) => {

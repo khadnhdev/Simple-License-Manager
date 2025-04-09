@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
-    <a class="navbar-brand" href="/admin/dashboard">Quản lý License Keys</a>
+    <a class="navbar-brand" href="/admin/dashboard">License Key Converter</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -11,7 +11,7 @@
             <a class="nav-link <%= path === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <%= path && path.startsWith('/admin/apps') ? 'active' : '' %>" href="/admin/apps">Ứng dụng</a>
+            <a class="nav-link <%= path && path.startsWith('/admin/apps') ? 'active' : '' %>" href="/admin/apps">Applications</a>
           </li>
           <li class="nav-item">
             <a class="nav-link <%= path && path.startsWith('/admin/licenses') ? 'active' : '' %>" href="/admin/licenses">License Keys</a>
@@ -31,13 +31,13 @@
               <%= user.username %>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/admin/logout">Đăng xuất</a></li>
+              <li><a class="dropdown-item" href="/admin/logout">Logout</a></li>
             </ul>
           </li>
         <% } else { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin/login">Đăng nhập</a>
-          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="/admin/login">Login</a>
+          </li> -->
         <% } %>
       </ul>
     </div>
