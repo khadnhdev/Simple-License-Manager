@@ -103,6 +103,9 @@ const licenseController = {
 
   // Xử lý cập nhật license key
   update: async (req, res) => {
+    console.log(`Updating license with ID: ${req.params.id}`);
+    console.log('Request body:', req.body);
+    
     const { id } = req.params;
     const { max_verifications, verifications_left, expiry_date, is_active } = req.body;
     
@@ -111,8 +114,10 @@ const licenseController = {
         max_verifications: parseInt(max_verifications) || 0,
         verifications_left: parseInt(verifications_left) || 0,
         expiry_date: expiry_date || null,
-        is_active: is_active === 'on'
+        is_active: is_active === 'on' || is_active === true
       };
+      
+      console.log('License data to update:', license);
       
       const result = await License.update(id, license);
       

@@ -91,6 +91,8 @@ class License {
 
   static async update(id, license) {
     try {
+      console.log(`[LICENSE] Updating license ID ${id} with data:`, license);
+      
       const [result] = await executeQuery(`
         UPDATE license_keys 
         SET max_verifications = ?, verifications_left = ?, expiry_date = ?, is_active = ?
@@ -99,9 +101,11 @@ class License {
         license.max_verifications,
         license.verifications_left,
         license.expiry_date,
-        license.is_active,
+        license.is_active ? 1 : 0,
         id
       ]);
+      
+      console.log(`[LICENSE] Update result:`, result);
       return result.affectedRows > 0;
     } catch (error) {
       console.error('Error updating license:', error);

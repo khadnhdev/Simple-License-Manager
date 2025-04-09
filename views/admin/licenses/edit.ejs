@@ -1,0 +1,62 @@
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Chỉnh sửa License Key</h4>
+        </div>
+        <div class="card-body">
+          <form action="/admin/licenses/update/<%= license.id %>" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            
+            <div class="mb-3">
+              <label for="license_key" class="form-label">License Key</label>
+              <input type="text" class="form-control" id="license_key" value="<%= license.license_key %>" disabled>
+            </div>
+            
+            <div class="mb-3">
+              <label for="app_id" class="form-label">Ứng dụng</label>
+              <select class="form-select" id="app_id" disabled>
+                <% apps.forEach(app => { %>
+                  <option value="<%= app.id %>" <%= app.id == license.app_id ? 'selected' : '' %>><%= app.name %></option>
+                <% }) %>
+              </select>
+              <div class="form-text">Không thể thay đổi ứng dụng sau khi tạo license key.</div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="max_verifications" class="form-label">Số lần xác thực tối đa</label>
+              <input type="number" class="form-control" id="max_verifications" name="max_verifications" min="0" value="<%= license.max_verifications %>">
+              <div class="form-text">Nhập 0 để không giới hạn số lần xác thực.</div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="verifications_left" class="form-label">Số lần xác thực còn lại</label>
+              <input type="number" class="form-control" id="verifications_left" name="verifications_left" min="0" value="<%= license.verifications_left %>">
+            </div>
+            
+            <div class="mb-3">
+              <label for="expiry_date" class="form-label">Ngày hết hạn (Tùy chọn)</label>
+              <input type="date" class="form-control" id="expiry_date" name="expiry_date" 
+                     value="<%= license.expiry_date ? new Date(license.expiry_date).toISOString().split('T')[0] : '' %>">
+              <div class="form-text">Để trống nếu không giới hạn thời gian sử dụng.</div>
+            </div>
+            
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+                     <%= license.is_active ? 'checked' : '' %>>
+              <label class="form-check-label" for="is_active">
+                License key hoạt động
+              </label>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+              <a href="/admin/licenses" class="btn btn-secondary">Hủy</a>
+              <button type="submit" class="btn btn-primary">Cập nhật License Key</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

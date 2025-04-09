@@ -29,7 +29,7 @@ router.get('/licenses', isAuthenticated, licenseController.index);
 router.get('/licenses/create', isAuthenticated, licenseController.showCreate);
 router.post('/licenses', isAuthenticated, licenseController.create);
 router.get('/licenses/edit/:id', isAuthenticated, licenseController.showEdit);
-router.put('/licenses/:id', isAuthenticated, licenseController.update);
+router.post('/licenses/update/:id', isAuthenticated, licenseController.update);
 router.delete('/licenses/:id', isAuthenticated, licenseController.delete);
 router.get('/licenses/logs/:id', isAuthenticated, licenseController.showLogs);
 router.get('/licenses/export', isAuthenticated, licenseController.exportCSV);
