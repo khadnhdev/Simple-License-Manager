@@ -23,10 +23,12 @@
         <div class="col-md-6">
           <p><strong>ID:</strong> <%= app.id %></p>
           <p><strong>Tên:</strong> <%= app.name %></p>
+          <p><strong>ID ứng dụng bên ngoài:</strong> <%= app.external_app_id || 'Không có' %></p>
         </div>
         <div class="col-md-6">
           <p><strong>Ngày tạo:</strong> <%= new Date(app.created_at).toLocaleString('vi-VN') %></p>
           <p><strong>Mô tả:</strong> <%= app.description || 'Không có mô tả' %></p>
+          <p><strong>Loại ứng dụng bên ngoài:</strong> <%= app.external_app_type || 'Không có' %></p>
         </div>
       </div>
     </div>

@@ -17,6 +17,18 @@
               <textarea class="form-control" id="description" name="description" rows="3"></textarea>
             </div>
             
+            <div class="mb-3">
+              <label for="external_app_id" class="form-label">ID ứng dụng bên ngoài</label>
+              <input type="text" class="form-control" id="external_app_id" name="external_app_id">
+              <small class="text-muted">ID của ứng dụng trên hệ thống bên ngoài (nếu có)</small>
+            </div>
+            
+            <div class="mb-3">
+              <label for="external_app_type" class="form-label">Loại ứng dụng bên ngoài</label>
+              <input type="text" class="form-control" id="external_app_type" name="external_app_type">
+              <small class="text-muted">Loại hoặc nền tảng của ứng dụng bên ngoài (nếu có)</small>
+            </div>
+            
             <div class="d-flex justify-content-between">
               <a href="/admin/apps" class="btn btn-secondary">Hủy</a>
               <button type="submit" class="btn btn-primary">Tạo ứng dụng</button>

@@ -20,7 +20,7 @@ router.get('/apps', isAuthenticated, appController.index);
 router.get('/apps/create', isAuthenticated, appController.showCreate);
 router.post('/apps', isAuthenticated, appController.create);
 router.get('/apps/edit/:id', isAuthenticated, appController.showEdit);
-router.put('/apps/:id', isAuthenticated, appController.update);
+router.post('/apps/update/:id', isAuthenticated, appController.update);
 router.delete('/apps/:id', isAuthenticated, appController.delete);
 router.get('/apps/:id', isAuthenticated, appController.showDetail);
 

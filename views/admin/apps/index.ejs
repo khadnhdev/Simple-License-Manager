@@ -15,6 +15,8 @@
               <tr>
                 <th>Tên ứng dụng</th>
                 <th>Mô tả</th>
+                <th>ID bên ngoài</th>
+                <th>Loại bên ngoài</th>
                 <th>Ngày tạo</th>
                 <th class="text-center">License keys</th>
                 <th class="text-end">Thao tác</th>
@@ -25,6 +27,8 @@
                 <tr>
                   <td><%= app.name %></td>
                   <td><%= app.description || 'Không có mô tả' %></td>
+                  <td><%= app.external_app_id || '-' %></td>
+                  <td><%= app.external_app_type || '-' %></td>
                   <td><%= new Date(app.created_at).toLocaleDateString('vi-VN') %></td>
                   <td class="text-center">
                     <a href="/admin/apps/<%= app.id %>" class="btn btn-sm btn-outline-primary">

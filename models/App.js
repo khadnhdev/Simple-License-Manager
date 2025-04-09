@@ -24,8 +24,8 @@ class App {
   static async create(app) {
     try {
       const [result] = await executeQuery(
-        'INSERT INTO apps (name, description) VALUES (?, ?)',
-        [app.name, app.description]
+        'INSERT INTO apps (name, description, external_app_id, external_app_type) VALUES (?, ?, ?, ?)',
+        [app.name, app.description, app.external_app_id, app.external_app_type]
       );
       return result.insertId;
     } catch (error) {
@@ -37,8 +37,8 @@ class App {
   static async update(id, app) {
     try {
       const [result] = await executeQuery(
-        'UPDATE apps SET name = ?, description = ? WHERE id = ?',
-        [app.name, app.description, id]
+        'UPDATE apps SET name = ?, description = ?, external_app_id = ?, external_app_type = ? WHERE id = ?',
+        [app.name, app.description, app.external_app_id, app.external_app_type, id]
       );
       return result.affectedRows > 0;
     } catch (error) {

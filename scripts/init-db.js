@@ -44,7 +44,9 @@ async function initializeDatabase() {
         name VARCHAR(100) NOT NULL,
         description TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        external_app_id VARCHAR(255) NULL,
+        external_app_type VARCHAR(100) NULL
       )
     `);
     console.log('Bảng apps được tạo hoặc đã tồn tại.');

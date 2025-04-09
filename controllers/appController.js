@@ -26,7 +26,7 @@ const appController = {
 
   // Xử lý tạo app mới
   create: async (req, res) => {
-    const { name, description } = req.body;
+    const { name, description, external_app_id, external_app_type } = req.body;
     
     // Validate input
     if (!name) {
@@ -35,7 +35,7 @@ const appController = {
     }
     
     try {
-      await App.create({ name, description });
+      await App.create({ name, description, external_app_id, external_app_type });
       req.flash('success_msg', 'Tạo ứng dụng mới thành công');
       res.redirect('/admin/apps');
     } catch (error) {
@@ -55,6 +55,9 @@ const appController = {
         return res.redirect('/admin/apps');
       }
       
+      console.log(`Edit form for app ID: ${req.params.id}`);
+      console.log(`App data:`, app);
+      
       res.render('admin/apps/edit', { 
         title: 'Chỉnh sửa ứng dụng',
         app
@@ -68,8 +71,11 @@ const appController = {
 
   // Xử lý cập nhật app
   update: async (req, res) => {
+    console.log(`Updating app with ID: ${req.params.id}`);
+    console.log('Request body:', req.body);
+    
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, external_app_id, external_app_type } = req.body;
     
     // Validate input
     if (!name) {
@@ -78,7 +84,7 @@ const appController = {
     }
     
     try {
-      const result = await App.update(id, { name, description });
+      const result = await App.update(id, { name, description, external_app_id, external_app_type });
       
       if (result) {
         req.flash('success_msg', 'Cập nhật ứng dụng thành công');
